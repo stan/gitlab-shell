@@ -16,7 +16,7 @@ class GitlabAccess
     @repo_path = repo_path.strip
     @actor = actor
     @repo_name = extract_repo_name(@repo_path.dup, config.repos_path.to_s)
-    @changes = changes.lines
+    @changes = changes.split("\n")
   end
 
   def exec
