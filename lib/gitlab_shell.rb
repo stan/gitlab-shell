@@ -219,8 +219,6 @@ class GitlabShell # rubocop:disable Metrics/ClassLength
     puts lfs_access.authentication_payload
   end
 
-  private
-
   def continue?(question)
     puts "#{question} (yes/no)"
     STDOUT.flush # Make sure the question gets output before we wait for input
@@ -277,4 +275,8 @@ class GitlabShell # rubocop:disable Metrics/ClassLength
 
     @repo_path = repo_path
   end
+
+  private
+
+
 end
