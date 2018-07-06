@@ -104,14 +104,22 @@ class GitlabShell # rubocop:disable Metrics/ClassLength
   end
 
   def verify_access
-    status = api.check_access(@git_access, nil, @repo_name, @key_id, '_any', GL_PROTOCOL)
+    result = api.check_access(@git_access, nil, @repo_name, @key_id, '_any', GL_PROTOCOL)
 
-    raise AccessDeniedError, status.message unless status.allowed?
+    case result
+    when GitAccessStatus
+      raise AccessDeniedError, result.message unless result.allowed?
 
-    self.repo_path = status.repository_path
-    @gl_repository = status.gl_repository
-    @gitaly = status.gitaly
-    @username = status.gl_username
+      self.repo_path = result.repository_path
+      @gl_repository = result.gl_repository
+      @gitaly = result.gitaly
+      @username = result.gl_username
+
+    when CustomAction
+      # FIXME: get username for real
+      result.klass_instance_execute(@key_id)
+      raise CustomActionExecutedError, result.message
+    end
   end
 
   def process_cmd(args)
