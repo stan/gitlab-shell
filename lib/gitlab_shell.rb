@@ -8,6 +8,7 @@ class GitlabShell # rubocop:disable Metrics/ClassLength
   class AccessDeniedError < StandardError; end
   class DisallowedCommandError < StandardError; end
   class InvalidRepositoryPathError < StandardError; end
+  class CustomActionExecutedError < StandardError; end
 
   GIT_COMMANDS = %w(git-upload-pack git-receive-pack git-upload-archive git-lfs-authenticate).freeze
   GITALY_MIGRATED_COMMANDS = {
@@ -61,6 +62,8 @@ class GitlabShell # rubocop:disable Metrics/ClassLength
   rescue InvalidRepositoryPathError
     $stderr.puts "GitLab: Invalid repository path"
     false
+  rescue CustomActionExecutedError
+    true
   end
 
   protected
